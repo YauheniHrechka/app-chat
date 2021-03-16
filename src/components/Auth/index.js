@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
+import axios from 'axios';
 
 import './Auth.scss';
 
@@ -7,6 +8,27 @@ const Auth = () => {
 
     const [name, setName] = React.useState('');
     const [password, setPassword] = React.useState('');
+
+    const checkUser = async (params) => {
+        const res = await axios.get('/users/check', { params });
+        return res.data;
+    }
+
+    const connectUser = async (user) => {
+        const data = await checkUser(user);
+        if (data) {
+            user = { ...data, online: true };
+            console.log('user', user);
+        }
+    }
+
+    const onEnter = () => {
+        const user = {
+            name,
+            password
+        }
+        connectUser(user);
+    }
 
     return (
         <div className="auth-wrapper">
@@ -21,7 +43,7 @@ const Auth = () => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 7 }}>
-                    <Button type="primary" htmlType="button">Enter</Button>
+                    <Button onClick={onEnter} type="primary" htmlType="button">Enter</Button>
                 </Form.Item>
             </Form>
         </div>

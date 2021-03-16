@@ -1,11 +1,12 @@
 import React from 'react';
+import { Auth } from './components';
 
-import './App.css';
+import './styles/app.scss';
 
 const App = () => {
   return (
-    <div className="App">
-      <h1>App</h1>
+    <div className="wrapper">
+      <Auth />
     </div>
   );
 }

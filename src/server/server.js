@@ -9,6 +9,9 @@ mongoose.connect('mongodb://localhost:27017/chat', {
     useUnifiedTopology: true
 });
 
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
 const UserController = require('./controllers/User');
 const User = new UserController();
 
@@ -25,6 +28,30 @@ app.get('/users/check', User.check);
 app.get('/rooms', Room.index);
 app.get('/rooms/userid', Room.readByUserID);
 
-app.listen(7777, () => {
+let socketRooms = [];
+
+io.on('connection', (socket) => {
+
+    socket.on('USER:ONLINE', ({ rooms, user }) => {
+        try {
+            User.update({ _id: mongoose.Types.ObjectId(user._id) }, { $set: { online: true, socket_id: socket.id } });
+        } catch (error) {
+            console.error(error);
+        }
+        // connecting to the rooms ... 
+        rooms.forEach(({ _id }) => {
+            socket.join(_id);
+            io.sockets.in(_id).emit('USER:ONLINE', {
+                _id,
+                socket_id: socket.id,
+                user
+            });
+        });
+
+        [, ...socketRooms] = [...socket.rooms.values()];
+    })
+})
+
+http.listen(7777, () => {
     console.log('Server has started ...');
 });

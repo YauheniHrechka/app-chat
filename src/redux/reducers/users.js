@@ -6,6 +6,12 @@ const initialState = {
     userRooms: new Map()
 }
 
+const setUserOnline = ({ userRooms }, { _id, socket_id, user }) => {
+    userRooms.get(_id).users.get(user._id).online = true;
+    userRooms.get(_id).users.get(user._id).socket_id = socket_id;
+    return userRooms;
+}
+
 const setUserRooms = (state, payload) => {
     const userRooms = new Map();
     payload.forEach(room => {
@@ -44,6 +50,16 @@ const users = (state = initialState, { type, payload }) => {
             return {
                 ...state,
                 userRooms: setUserRooms(state, payload)
+            };
+
+        case 'SET_USER_ONLINE_IN_ROOMS':
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    socket_id: payload ? payload.socket_id : ''
+                },
+                userRooms: setUserOnline(state, payload)
             };
 
         default:

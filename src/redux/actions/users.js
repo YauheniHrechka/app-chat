@@ -12,3 +12,8 @@ export const setRoomsByUser = (rooms) => ({
     type: 'SET_ROOMS_BY_USER',
     payload: rooms
 })
+
+export const setUserOnlineInRooms = (user) => ({
+    type: "SET_USER_ONLINE_IN_ROOMS",
+    payload: user
+})

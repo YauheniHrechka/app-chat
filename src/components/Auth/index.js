@@ -1,11 +1,14 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
+import { Context } from '../../context';
+import { setIsJoined } from '../../redux/actions/users';
 import axios from 'axios';
 
 import './Auth.scss';
 
 const Auth = () => {
 
+    const dispatch = React.useContext(Context);
     const [name, setName] = React.useState('');
     const [password, setPassword] = React.useState('');
 
@@ -18,7 +21,7 @@ const Auth = () => {
         const data = await checkUser(user);
         if (data) {
             user = { ...data, online: true };
-            console.log('user', user);
+            dispatch(setIsJoined(user));
         }
     }
 

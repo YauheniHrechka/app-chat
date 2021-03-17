@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
 import { Context } from '../../context';
-import { setIsJoined } from '../../redux/actions/users';
+import { setIsJoined, setRooms, setRoomsByUser } from '../../redux/actions/users';
 import axios from 'axios';
 
 import './Auth.scss';
@@ -17,11 +17,19 @@ const Auth = () => {
         return res.data;
     }
 
+    const getRooms = async (params) => {
+        const res = await axios.get('/rooms/userid', { params });
+        return res.data;
+    }
+
     const connectUser = async (user) => {
         const data = await checkUser(user);
         if (data) {
             user = { ...data, online: true };
             dispatch(setIsJoined(user));
+
+            const rooms = await getRooms({ id: user._id });
+            dispatch(setRoomsByUser(rooms));
         }
     }
 
@@ -32,6 +40,11 @@ const Auth = () => {
         }
         connectUser(user);
     }
+
+    React.useEffect(() => {
+        axios.get('/rooms', {})
+            .then(res => dispatch(setRooms(res.data)));
+    }, []);
 
     return (
         <div className="auth-wrapper">

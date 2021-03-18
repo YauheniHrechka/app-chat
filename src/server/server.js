@@ -50,6 +50,25 @@ io.on('connection', (socket) => {
 
         [, ...socketRooms] = [...socket.rooms.values()];
     })
+
+    socket.on('disconnect', () => {
+        UserModel.find({ socket_id: socket.id })
+            .then(users => {
+                if (users) {
+                    socketRooms.forEach(_id => io.sockets.in(_id).emit('USER:OFFLINE', {
+                        _id,
+                        socket_id: socket.id,
+                        user: users[0]
+                    }));
+                }
+            });
+
+        try {
+            User.update({ socket_id: socket.id }, { $set: { online: false, socket_id: '' } });
+        } catch (error) {
+            console.error(error);
+        }
+    });
 })
 
 http.listen(7777, () => {

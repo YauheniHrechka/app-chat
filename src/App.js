@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Context } from './context';
 import { Auth, Chat } from './components';
-import { setUserOnlineInRooms } from './redux/actions/users';
+import { setUserOnlineInRooms, setUserOfflineInRooms } from './redux/actions/users';
 import socket from './socket';
 
 import './styles/app.scss';
@@ -15,6 +15,7 @@ const App = () => {
 
   React.useEffect(() => {
     socket.on('USER:ONLINE', data => dispatch(setUserOnlineInRooms(data)));
+    socket.on('USER:OFFLINE', data => dispatch(setUserOfflineInRooms(data)));
   }, []);
 
   return (

@@ -12,6 +12,12 @@ const setUserOnline = ({ userRooms }, { _id, socket_id, user }) => {
     return userRooms;
 }
 
+const setUserOffline = ({ userRooms }, { _id, user }) => {
+    userRooms.get(_id).users.get(user._id).online = false;
+    userRooms.get(_id).users.get(user._id).socket_id = '';
+    return userRooms
+}
+
 const setUserRooms = (state, payload) => {
     const userRooms = new Map();
     payload.forEach(room => {
@@ -60,6 +66,12 @@ const users = (state = initialState, { type, payload }) => {
                     socket_id: payload ? payload.socket_id : ''
                 },
                 userRooms: setUserOnline(state, payload)
+            };
+
+        case 'SET_USER_OFFLINE_IN_ROOMS':
+            return {
+                ...state,
+                userRooms: setUserOffline(state, payload)
             };
 
         default:

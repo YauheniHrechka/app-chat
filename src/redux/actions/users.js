@@ -17,3 +17,8 @@ export const setUserOnlineInRooms = (user) => ({
     type: "SET_USER_ONLINE_IN_ROOMS",
     payload: user
 })
+
+export const setUserOfflineInRooms = (user) => ({
+    type: "SET_USER_OFFLINE_IN_ROOMS",
+    payload: user
+})

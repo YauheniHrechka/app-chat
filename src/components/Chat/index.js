@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink, Switch, Route } from 'react-router-dom';
 import { ChatBlock, Room } from '../';
 import { Badge, Input } from 'antd';
 
@@ -9,6 +10,8 @@ const { TextArea } = Input;
 const Chat = ({ rooms, userRooms, user }) => {
 
     userRooms = [...userRooms.values()];
+
+    const [activeRoomId, setActiveRoomId] = React.useState('');
     const [message, setMessage] = React.useState('');
 
     return (
@@ -20,11 +23,27 @@ const Chat = ({ rooms, userRooms, user }) => {
                     </div>
                     <hr />
                     <div className="chat-rooms">
-                        {userRooms.length > 0 && userRooms.map(room => <Room key={room._id} {...room} />)}
+                        <NavLink exact to='/'></NavLink>
+                        {userRooms.length > 0 && userRooms.map(room =>
+                            <NavLink
+                                key={room._id}
+                                exact
+                                to={`/chat/${room.name}`}
+                                activeClassName="active-room"
+                                onClick={() => setActiveRoomId(room._id)}
+                            >
+                                <Room {...room} />
+                            </NavLink>
+                        )}
                     </div>
                 </div>
                 <div className="chat-messages-container">
-                    <ChatBlock isEmpty users={[]} />
+                    <Switch>
+                        <Route exact path='/' render={() => <ChatBlock isEmpty users={[]} name={''} />} />
+                        {userRooms.map(room =>
+                            <Route key={room._id} exact path={`/chat/${room.name}`} render={() => <ChatBlock isEmpty={false} {...room} />} />
+                        )}
+                    </Switch>
                     <div className="chat-send">
                         <TextArea
                             placeholder="Enter a message"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Room } from '../';
+import { ChatBlock, Room } from '../';
 import { Badge, Input } from 'antd';
 
 import './Chat.scss';
@@ -24,6 +24,7 @@ const Chat = ({ rooms, userRooms, user }) => {
                     </div>
                 </div>
                 <div className="chat-messages-container">
+                    <ChatBlock isEmpty users={[]} />
                     <div className="chat-send">
                         <TextArea
                             placeholder="Enter a message"

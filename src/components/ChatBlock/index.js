@@ -1,4 +1,5 @@
 import React from 'react';
+import { User } from '../';
 import { Empty } from 'antd';
 
 import './ChatBlock.scss';
@@ -6,6 +7,8 @@ import './ChatBlock.scss';
 const ChatBlock = ({ isEmpty, name, users, messages }) => {
 
     users = [...users.values()];
+
+    const [activeUsers, setActiveUsers] = React.useState(false);
 
     return (
         <>
@@ -15,12 +18,17 @@ const ChatBlock = ({ isEmpty, name, users, messages }) => {
                 </div>
                 {!isEmpty &&
                     <div className="chat-users-header">
-                        <span>{`users (${users.length})`}</span>
+                        <span onClick={() => setActiveUsers(!activeUsers)}>{`users (${users.length})`}</span>
                     </div>
                 }
             </div>
             <div className="chat-messages">
                 <div className="block-chat-messages">
+                    {!isEmpty &&
+                        <div className={`users ${activeUsers && `active-users`}`}>
+                            {users.map((user, index) => <User key={index} {...user} />)}
+                        </div>
+                    }
                     <div className="messages">
                         {isEmpty ?
                             <Empty className="block-empty">Choose a room</Empty> :

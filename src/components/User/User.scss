@@ -1,0 +1,23 @@
+.user {
+    display: flex;
+    margin: 5px 0;
+    padding: 5px;
+    background: #fff;
+    border-radius: 15px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: .3s;
+
+    .user-avatar,
+    .user-description {
+        display: flex;
+        align-items: center;
+    }
+    
+    .user-description {
+        padding: 0 10px;
+        font-weight: 500;
+    }
+
+    &:hover { opacity: .8; }
+}

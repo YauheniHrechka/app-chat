@@ -13,10 +13,14 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 const UserController = require('./controllers/User');
+const UserModel = require('./models/User');
 const User = new UserController();
 
 const RoomController = require('./controllers/Room');
 const Room = new RoomController();
+
+const MessageController = require('./controllers/Message');
+const Message = new MessageController();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -27,6 +31,8 @@ app.get('/users/check', User.check);
 
 app.get('/rooms', Room.index);
 app.get('/rooms/userid', Room.readByUserID);
+
+app.get('/messages/roomid', Message.readByRoomID);
 
 let socketRooms = [];
 

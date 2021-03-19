@@ -31,6 +31,14 @@ class UserContriller {
                 }
             })
     }
+
+    update(req, set) {
+        User.updateOne(req, set, (err, res) => {
+            if (err) {
+                res.send(err);
+            }
+        });
+    }
 }
 
 module.exports = UserContriller;

@@ -3,7 +3,7 @@ import { Empty } from 'antd';
 
 import './ChatBlock.scss';
 
-const ChatBlock = ({ isEmpty, name, users }) => {
+const ChatBlock = ({ isEmpty, name, users, messages }) => {
 
     users = [...users.values()];
 
@@ -22,8 +22,10 @@ const ChatBlock = ({ isEmpty, name, users }) => {
             <div className="chat-messages">
                 <div className="block-chat-messages">
                     <div className="messages">
-                        {isEmpty &&
-                            <Empty className="block-empty">Choose a room</Empty>
+                        {isEmpty ?
+                            <Empty className="block-empty">Choose a room</Empty> :
+                            messages.length > 0 && messages.map((message, index) => <div key={index}>{message.text}</div>
+                            )
                         }
                     </div>
                 </div>

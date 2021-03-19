@@ -2,7 +2,9 @@ import React from 'react';
 import { Button, Form, Input } from 'antd';
 import { Context } from '../../context';
 import { setIsJoined, setRooms, setRoomsByUser } from '../../redux/actions/users';
+import { setMessages } from '../../redux/actions/messages';
 import axios from 'axios';
+import socket from '../../socket';
 
 import './Auth.scss';
 
@@ -22,6 +24,12 @@ const Auth = () => {
         return res.data;
     }
 
+    const getMessages = async (params) => {
+        console.log('params', params);
+        const res = await axios.get('/messages/roomid', { params });
+        return res.data;
+    }
+
     const connectUser = async (user) => {
         const data = await checkUser(user);
         if (data) {
@@ -30,6 +38,11 @@ const Auth = () => {
 
             const rooms = await getRooms({ id: user._id });
             dispatch(setRoomsByUser(rooms));
+
+            const messages = await getMessages({ rooms: Array.from(rooms, ({ _id }) => _id) });
+            dispatch(setMessages(messages));
+
+            socket.emit('USER:ONLINE', { rooms, user });
         }
     }
 

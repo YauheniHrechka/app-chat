@@ -39,7 +39,7 @@ const Chat = ({ rooms, userRooms, user }) => {
                 </div>
                 <div className="chat-messages-container">
                     <Switch>
-                        <Route exact path='/' render={() => <ChatBlock isEmpty users={[]} name={''} />} />
+                        <Route exact path='/' render={() => <ChatBlock isEmpty users={[]} name={''} messages={[]} />} />
                         {userRooms.map(room =>
                             <Route key={room._id} exact path={`/chat/${room.name}`} render={() => <ChatBlock isEmpty={false} {...room} />} />
                         )}

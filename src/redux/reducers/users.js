@@ -38,6 +38,11 @@ const setUserRooms = (state, payload) => {
     return userRooms;
 }
 
+const setMessages = (userRooms, messages) => {
+    userRooms.forEach(room => room['messages'] = messages.filter(message => message.room_id === room._id));
+    return userRooms;
+}
+
 const users = (state = initialState, { type, payload }) => {
     switch (type) {
         case "IS_JOINED":
@@ -72,6 +77,12 @@ const users = (state = initialState, { type, payload }) => {
             return {
                 ...state,
                 userRooms: setUserOffline(state, payload)
+            };
+
+        case 'SET_MESSAGES':
+            return {
+                ...state,
+                userRooms: setMessages(state.userRooms, payload)
             };
 
         default:

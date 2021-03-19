@@ -1,10 +1,10 @@
 import React from 'react';
-import { User } from '../';
+import { Message, User } from '../';
 import { Empty } from 'antd';
 
 import './ChatBlock.scss';
 
-const ChatBlock = ({ isEmpty, name, users, messages }) => {
+const ChatBlock = ({ isEmpty, name, user, users, messages }) => {
 
     users = [...users.values()];
 
@@ -32,7 +32,12 @@ const ChatBlock = ({ isEmpty, name, users, messages }) => {
                     <div className="messages">
                         {isEmpty ?
                             <Empty className="block-empty">Choose a room</Empty> :
-                            messages.length > 0 && messages.map((message, index) => <div key={index}>{message.text}</div>
+                            messages.map((message, index) =>
+                                <Message
+                                    key={index}
+                                    isMyMessage={user._id === message.user._id}
+                                    {...message}
+                                />
                             )
                         }
                     </div>

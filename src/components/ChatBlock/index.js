@@ -9,6 +9,10 @@ const ChatBlock = ({ chatMessagesRef, isEmpty, name, user, users, messages }) =>
     users = [...users.values()];
     const [activeUsers, setActiveUsers] = React.useState(false);
 
+    React.useEffect(() => {
+        chatMessagesRef.current.scrollTo(0, 99999999999);
+    });
+
     return (
         <>
             <div className="chat-header">

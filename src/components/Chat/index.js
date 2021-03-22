@@ -3,6 +3,8 @@ import { NavLink, Switch, Route } from 'react-router-dom';
 import { ChatBlock, Room } from '../';
 import { Badge, Input } from 'antd';
 import { Context } from '../../context';
+import { setAddedNewMessage } from '../../redux/actions/messages';
+import socket from '../../socket';
 
 import './Chat.scss';
 
@@ -28,8 +30,18 @@ const Chat = ({ rooms, userRooms, user }) => {
 
     const onSendMessage = () => {
         if (activeRoomId === '') return;
+
+        socket.emit('ROOM:NEW_MESSAGE', {
+            room_id: activeRoomId,
+            user,
+            text: message
+        });
         setMessage('');
     }
+
+    React.useEffect(() => {
+        socket.on('ROOM:ADDED_NEW_MESSAGE', (data) => dispatch(setAddedNewMessage(data)));
+    }, []);
 
     return (
         <div className="chat-wrapper">

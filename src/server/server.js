@@ -20,6 +20,7 @@ const RoomController = require('./controllers/Room');
 const Room = new RoomController();
 
 const MessageController = require('./controllers/Message');
+const MessageModel = require('./models/Message');
 const Message = new MessageController();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,6 +56,27 @@ io.on('connection', (socket) => {
         });
 
         [, ...socketRooms] = [...socket.rooms.values()];
+    })
+
+    socket.on('ROOM:NEW_MESSAGE', (obj) => {
+
+        const { room_id, user, text } = obj;
+        // connecting to the room ... 
+        socket.join(room_id);
+
+        const message = new MessageModel({
+            user_id: user._id,
+            room_id,
+            text
+        });
+
+        message.save()
+            .then(() => {
+                io.sockets.in(room_id).emit('ROOM:ADDED_NEW_MESSAGE', {
+                    ...obj,
+                    _id: message._id
+                });
+            })
     })
 
     socket.on('disconnect', () => {

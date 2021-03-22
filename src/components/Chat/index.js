@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, Switch, Route } from 'react-router-dom';
 import { ChatBlock, Room } from '../';
 import { Badge, Input } from 'antd';
+import { Context } from '../../context';
 
 import './Chat.scss';
 
@@ -10,9 +11,25 @@ const { TextArea } = Input;
 const Chat = ({ rooms, userRooms, user }) => {
 
     userRooms = [...userRooms.values()];
+    const dispatch = React.useContext(Context);
 
     const [activeRoomId, setActiveRoomId] = React.useState('');
     const [message, setMessage] = React.useState('');
+    const chatMessagesRef = React.useRef();
+
+    const onMessageChange = (e) => setMessage(e.target.value)
+
+    const onKeyDown = (e) => {
+        if (e.code === 'Enter') {
+            e.preventDefault();
+            onSendMessage();
+        }
+    }
+
+    const onSendMessage = () => {
+        if (activeRoomId === '') return;
+        setMessage('');
+    }
 
     return (
         <div className="chat-wrapper">
@@ -39,13 +56,15 @@ const Chat = ({ rooms, userRooms, user }) => {
                 </div>
                 <div className="chat-messages-container">
                     <Switch>
-                        <Route exact path='/' render={() => <ChatBlock isEmpty user={user} users={[]} name={''} messages={[]} />} />
+                        <Route exact path='/' render={() => <ChatBlock chatMessagesRef={chatMessagesRef} isEmpty user={user} users={[]} name={''} messages={[]} />} />
                         {userRooms.map(room =>
-                            <Route key={room._id} exact path={`/chat/${room.name}`} render={() => <ChatBlock isEmpty={false} user={user} {...room} />} />
+                            <Route key={room._id} exact path={`/chat/${room.name}`} render={() => <ChatBlock chatMessagesRef={chatMessagesRef} isEmpty={false} user={user} {...room} />} />
                         )}
                     </Switch>
                     <div className="chat-send">
                         <TextArea
+                            onChange={onMessageChange}
+                            onKeyDown={onKeyDown}
                             placeholder="Enter a message"
                             rows={3}
                             value={message}

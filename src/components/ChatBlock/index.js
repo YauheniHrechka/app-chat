@@ -4,10 +4,9 @@ import { Empty } from 'antd';
 
 import './ChatBlock.scss';
 
-const ChatBlock = ({ isEmpty, name, user, users, messages }) => {
+const ChatBlock = ({ chatMessagesRef, isEmpty, name, user, users, messages }) => {
 
     users = [...users.values()];
-
     const [activeUsers, setActiveUsers] = React.useState(false);
 
     return (
@@ -29,7 +28,7 @@ const ChatBlock = ({ isEmpty, name, user, users, messages }) => {
                             {users.map((user, index) => <User key={index} {...user} />)}
                         </div>
                     }
-                    <div className="messages">
+                    <div ref={chatMessagesRef} className="messages">
                         {isEmpty ?
                             <Empty className="block-empty">Choose a room</Empty> :
                             messages.map((message, index) =>

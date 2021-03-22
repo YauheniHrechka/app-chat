@@ -43,6 +43,11 @@ const setMessages = (userRooms, messages) => {
     return userRooms;
 }
 
+const addNewMessage = (userRooms, message) => {
+    userRooms.get(message.room_id).messages.push(message);
+    return userRooms;
+}
+
 const users = (state = initialState, { type, payload }) => {
     switch (type) {
         case "IS_JOINED":
@@ -83,6 +88,12 @@ const users = (state = initialState, { type, payload }) => {
             return {
                 ...state,
                 userRooms: setMessages(state.userRooms, payload)
+            };
+
+        case 'ADDED_NEW_MESSAGE':
+            return {
+                ...state,
+                userRooms: addNewMessage(state.userRooms, payload)
             };
 
         default:
